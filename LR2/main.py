@@ -1,4 +1,5 @@
 import numpy as np
+from itertools import permutations
 
 def expert_comp(x):
     n, m = x.shape
@@ -36,6 +37,23 @@ def spearman_corr(x):
 
     return correlations
 
+def generalize(x, exp_c):
+    n, m = x.shape
+    weighted_rankings = np.dot(x, exp_c)
+    
+    best_rank = None
+    best_distance = float('inf')
+
+    for perm in permutations(range(1, n + 1)):
+        distance = sum(
+            exp_c[i] * sum(abs(perm[j] - x[j, i]) for j in range(n))
+            for i in range(m)
+        )
+        if distance < best_distance:
+            best_distance = distance
+            best_rank = perm
+
+    return np.argsort(weighted_rankings) + 1, best_rank
 
 if __name__ == '__main__':
     x = np.array([
@@ -48,7 +66,15 @@ if __name__ == '__main__':
         [7, 2, 6, 6],
         [8, 1, 3, 2]
     ])
-    #k = expert_comp(x)
-    #kc = kendall_corr(x)
+
+    k = expert_comp(x)
+    kc = kendall_corr(x)
     sc = spearman_corr(x)
-    print(sc)
+    g = generalize(x, k)
+    
+    print(f'Коэффициенты компетентности экспертов: {k}')
+    print(f'Средняя выборка: {g[0]}')
+    print(f'Медиана: {g[1]}')
+    print(f'Коэффициент конкордации Кендалла: {kc}')
+    print(f'Коэффициент ранговой корелляции Спирмена: \n{sc}')
+    
