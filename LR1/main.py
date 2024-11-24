@@ -6,7 +6,11 @@ def input_data(file_paths=None):
     if file_paths:
         matrices = []
         for path in file_paths:
-            matrices.append(np.loadtxt(path))
+            try:
+                matrices.append(np.loadtxt(path))
+            except Exception as err:
+                print(f"Ошибка чтения файла: {err}\nИспользуются значения по умолчанию")
+                break
     else:
         matrices = [
             np.array([[0, 1  , 1, 1, 0],
