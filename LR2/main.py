@@ -14,20 +14,41 @@ def expert_comp(x):
 
     return k_t
 
+def kendall_corr(x):
+    n, m = x.shape
+    sums = np.sum(x, axis=1)
+    s = np.sum((sums - np.mean(sums))**2)
+    w = (12 * s) / (m**2 * (n**3 - n))
+    return w
+
+def spearman_corr(x):
+    n, m = x.shape
+    correlations = np.zeros((m, m))
+
+    for i in range(m-1):
+        for j in range(i + 1, m):
+            _sum = 0
+            for k in range(n):
+                _sum += (x[k, i] - x[k, j])**2
+            corr = 1 - (6 * _sum)/(n**3 - n)
+            correlations[i, j] = corr
+            correlations[j, i] = corr
+
+    return correlations
+
+
 if __name__ == '__main__':
-    y = np.array([
+    x = np.array([
         [1, 8, 1, 1],
-        [2, 7, 2, 8],
-        [3, 6, 8, 3],
+        [2, 7, 2, 5],
+        [3, 6, 5, 3],
         [4, 5, 4, 4],
-        [5, 4, 3, 2],
+        [5, 4, 8, 8],
         [6, 3, 7, 7],
         [7, 2, 6, 6],
-        [8, 1, 5, 5]
+        [8, 1, 3, 2]
     ])
-    x = np.array([[1, 2, 3, 4, 5, 6, 7, 8],
-                 [8, 7, 6, 5, 4, 3, 2, 1],
-                 [1, 2, 8, 4, 3, 7, 6, 5],
-                 [1, 8, 3, 4, 2, 7, 6, 5]])
-    k = expert_comp(y)
-    print(np.sum(k), k)
+    #k = expert_comp(x)
+    #kc = kendall_corr(x)
+    sc = spearman_corr(x)
+    print(sc)
