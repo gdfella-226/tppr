@@ -89,21 +89,20 @@ def input_data(file_paths=None):
         for path in file_paths:
             try:
                 mtx = np.loadtxt(path)
+                return mtx
             except Exception as err:
                 print(f"Ошибка чтения файла: {err}\nИспользуются значения по умолчанию")
                 break
-    else:
-        mtx = np.array([
-            [1, 8, 1, 1],
-            [2, 7, 2, 5],
-            [3, 6, 5, 3],
-            [4, 5, 4, 4],
-            [5, 4, 8, 8],
-            [6, 3, 7, 7],
-            [7, 2, 6, 6],
-            [8, 1, 3, 2]
-        ])
-        trust_prob = 0.95
+    mtx = np.array([
+        [1, 8, 1, 1],
+        [2, 7, 2, 5],
+        [3, 6, 5, 3],
+        [4, 5, 4, 4],
+        [5, 4, 8, 8],
+        [6, 3, 7, 7],
+        [7, 2, 6, 6],
+        [8, 1, 3, 2]
+    ])
     return mtx
 
 

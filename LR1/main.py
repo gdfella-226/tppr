@@ -8,6 +8,7 @@ def input_data(file_paths=None):
         for path in file_paths:
             try:
                 matrices.append(np.loadtxt(path))
+                
             except Exception as err:
                 print(f"Ошибка чтения файла: {err}\nИспользуются значения по умолчанию")
                 break
