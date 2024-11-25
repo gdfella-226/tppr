@@ -40,13 +40,13 @@ def spearman_corr(x):
                 correlations[i, j] = corr
                 correlations[j, i] = corr
             else:
-                correlations[i, j] = None
-                correlations[j, i] = None
+                correlations[i, j] = 0
+                correlations[j, i] = 0
     return correlations
 
 def generalize(x, exp_c):
     n, m = x.shape
-    weighted_rankings = np.dot(x, exp_c)
+    #weighted_rankings = np.dot(x, exp_c)
     
     best_rank = None
     best_distance = float('inf')
@@ -60,7 +60,20 @@ def generalize(x, exp_c):
             best_distance = distance
             best_rank = perm
 
-    return np.argsort(weighted_rankings) + 1, best_rank
+    sq_best_rank = None
+    best_distance = float('inf')
+
+    for perm in permutations(range(1, n + 1)):
+        sq_distance = sum(
+            exp_c[i] * sum((abs(perm[j] - x[j, i]))**2 for j in range(n))
+            for i in range(m)
+        )
+        if sq_distance < best_distance:
+            best_distance = sq_distance
+            sq_best_rank = perm
+
+    #return np.argsort(weighted_rankings) + 1, best_rank
+    return sq_best_rank, best_rank
 
 def gaz(mtx):
     k = expert_comp(mtx)
@@ -83,14 +96,14 @@ if __name__ == '__main__':
     ])
 
     y = np.array([
-        [7, 8, 7, 7],
-        [8, 7, 8, 8],
-        [6, 5, 6, 6],
-        [5, 6, 5, 5],
-        [3, 3, 3, 3],
-        [2, 2, 2, 2],
-        [1, 4, 4, 4],
-        [4, 1, 1, 1]
+        [1, 1],
+        [2, 5],
+        [5, 3],
+        [4, 4],
+        [8, 8],
+        [7, 7],
+        [6, 6],
+        [3, 2]
     ])
 
     k, kc, sc, g = gaz(x) 
