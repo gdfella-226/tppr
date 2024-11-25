@@ -42,7 +42,6 @@ def spearman_corr(x):
             else:
                 correlations[i, j] = None
                 correlations[j, i] = None
-
     return correlations
 
 def generalize(x, exp_c):
