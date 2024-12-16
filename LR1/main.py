@@ -14,8 +14,8 @@ def input_data(file_paths=None):
                 break
     else:
         matrices = [
-            np.array([[0, 1  , 1, 1, 0],
-                      [0, 0  , 0, 0, 0.5],
+            np.array([[0, 0  , 1, 1, 0],
+                      [1, 0  , 0, 0, 0.5],
                       [0, 1  , 0, 0, 0],
                       [0, 1  , 1, 0, 0],
                       [1, 0.5, 1, 1, 0]]),
@@ -65,6 +65,7 @@ def calculate(mtx, threshold=0.01):
 def main(file_paths=None):
     data = input_data(file_paths)
     mtx = aggregate(data)
+    print(mtx)
     res = calculate(mtx)
     print("Вектор относительной важности объектов:", res["vector"])
     print("Целесообразный порядок t:", res["order"])

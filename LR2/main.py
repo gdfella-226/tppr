@@ -76,15 +76,28 @@ def generalize(x, exp_c):
     #return np.argsort(weighted_rankings) + 1, best_rank
     return sq_best_rank, best_rank
 
-def gaz(files, tr_p):
-    mtx = input_data(files)
+
+def correct(rankings, weights):
+    avg_rank, median_rank = generalize(rankings, weights)
+    new_rankings = rankings.copy()
+    for i in range(rankings.shape[1]):
+        new_rankings[:, i] = 0.8 * rankings[:, i] + 0.2 * np.array(median_rank)
+
+    return new_rankings
+
+
+
+def gaz(mtx, tr_p=0.95):
+    
     k = expert_comp(mtx)
     kc = kendall_corr(mtx)
     sc = spearman_corr(mtx, float(tr_p))
     g = generalize(mtx, k)
+
+    
     return k, kc, sc, g
 
-def input_data(file_paths=None):
+def input_data(file_paths="./data/l22.txt"):
     if file_paths:
         for path in file_paths:
             try:
@@ -122,8 +135,8 @@ if __name__ == '__main__':
         [6, 6],
         [3, 2]
     ])
-
-    k, kc, sc, g = gaz(args.file, args.trustprob) 
+    mtx = input_data(args.file)
+    k, kc, sc, g = gaz(mtx, args.trustprob) 
     
     print(f'Коэффициенты компетентности экспертов: {k}')
     print(f'Средняя выборка: {g[0]}')
